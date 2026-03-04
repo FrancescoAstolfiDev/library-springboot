@@ -30,10 +30,22 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build()); //  404 Not Found  if not exist
     }
 
+    @GetMapping("/search") // dinamic endpoint
+    public ResponseEntity<List<BookDTO>> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author) {
+
+        List<BookDTO> results = bookService.findBooksDynamic(title, author);
+        return ResponseEntity.ok(results);
+    }
+
+
     // POST /api/books it create a new book
     @PostMapping
     public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO book) { // deserialize the json in input
         BookDTO savedBook = bookService.save(book); // save the new data
         return ResponseEntity.status(201).body(savedBook); // it return the 201 created or nu
     }
+
+
 }
